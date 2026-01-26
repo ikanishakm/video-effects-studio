@@ -1,10 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { presets } from "@/config/presets";
 
 export default function Home() {
-  const router = useRouter();
+  const STUDIO_PORT = 3001;
+
+  const openRemotionStudio = (compositionId: string) => {
+    // Opens Remotion Studio with the specific composition
+    const studioUrl = `http://localhost:${STUDIO_PORT}/Video-Effects/${compositionId}`;
+    window.open(studioUrl, "_blank");
+  };
 
   return (
     <main style={styles.main}>
@@ -12,8 +17,15 @@ export default function Home() {
         <header style={styles.header}>
           <h1 style={styles.title}>Video Effects Studio</h1>
           <p style={styles.subtitle}>
-            Choose an effect preset to preview it with Remotion Player
+            Choose an effect preset to open it in Remotion Studio
           </p>
+          <div style={styles.instructions}>
+            <span style={styles.badge}>Step 1</span>
+            <span>Run</span>
+            <code style={styles.code}>npm run remotion:studio</code>
+            <span style={styles.badge}>Step 2</span>
+            <span>Click a card below</span>
+          </div>
         </header>
 
         <div style={styles.grid}>
@@ -24,7 +36,7 @@ export default function Home() {
                 ...styles.card,
                 borderColor: preset.color,
               }}
-              onClick={() => router.push(`/studio/${preset.id}`)}
+              onClick={() => openRemotionStudio(preset.compositionId)}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px)";
                 e.currentTarget.style.boxShadow = `0 20px 40px ${preset.color}30`;
@@ -103,6 +115,25 @@ const styles: { [key: string]: React.CSSProperties } = {
   subtitle: {
     color: "var(--text-secondary)",
     fontSize: 18,
+    marginBottom: 20,
+  },
+  instructions: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 10,
+    background: "var(--bg-secondary)",
+    padding: "12px 20px",
+    borderRadius: 12,
+    fontSize: 14,
+    color: "var(--text-secondary)",
+  },
+  badge: {
+    background: "var(--accent)",
+    color: "white",
+    padding: "4px 10px",
+    borderRadius: 6,
+    fontSize: 12,
+    fontWeight: 600,
   },
   code: {
     background: "var(--bg-tertiary)",
