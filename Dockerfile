@@ -41,5 +41,8 @@ COPY . .
 # Expose port for Remotion Studio
 EXPOSE 3001
 
-# Start Remotion Studio using shell to expand $PORT
-CMD ["sh", "-c", "npx remotion studio --port ${PORT:-3001}"]
+# Copy and make start script executable
+RUN chmod +x start.sh
+
+# Start Remotion Studio
+CMD ["./start.sh"]
