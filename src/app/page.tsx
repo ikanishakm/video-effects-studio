@@ -3,11 +3,17 @@
 import { presets } from "@/config/presets";
 
 export default function Home() {
-  const STUDIO_URL = "https://video-effects-studio-production.up.railway.app";
+  const getStudioUrl = () => {
+    if (typeof window !== "undefined") {
+      const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+      return isLocal ? "http://localhost:3001" : "https://video-effects-studio-production.up.railway.app";
+    }
+    return "https://video-effects-studio-production.up.railway.app";
+  };
 
   const openRemotionStudio = (compositionId: string) => {
     // Opens Remotion Studio with the specific composition
-    const studioUrl = `${STUDIO_URL}/Video-Effects/${compositionId}`;
+    const studioUrl = `${getStudioUrl()}/Video-Effects/${compositionId}`;
     window.open(studioUrl, "_blank");
   };
 
