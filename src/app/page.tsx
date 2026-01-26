@@ -24,7 +24,7 @@ export default function Home() {
                 ...styles.card,
                 borderColor: preset.color,
               }}
-              onClick={() => router.push(`/preview/${preset.id}`)}
+              onClick={() => router.push(`/studio/${preset.id}`)}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px)";
                 e.currentTarget.style.boxShadow = `0 20px 40px ${preset.color}30`;
@@ -54,7 +54,7 @@ export default function Home() {
                 >
                   {preset.compositionId}
                 </span>
-                <span style={styles.openStudio}>Preview →</span>
+                <span style={styles.openStudio}>Open Studio →</span>
               </div>
             </div>
           ))}
