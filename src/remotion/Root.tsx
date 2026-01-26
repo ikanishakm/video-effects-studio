@@ -4,6 +4,7 @@ import { FadeScaleVideo, fadeScaleVideoSchema } from "./compositions/FadeScaleVi
 import { BounceInVideo, bounceInVideoSchema } from "./compositions/BounceInVideo";
 import { RotateRevealVideo, rotateRevealVideoSchema } from "./compositions/RotateRevealVideo";
 import { ZoomBlurVideo, zoomBlurVideoSchema } from "./compositions/ZoomBlurVideo";
+import { SphereToCanvas, sphereToCanvasSchema } from "./compositions/SphereToCanvas";
 
 export const RemotionRoot = () => {
   return (
@@ -81,6 +82,27 @@ export const RemotionRoot = () => {
           zoomDuration: 1,
           startScale: 2,
           startBlur: 20,
+        }}
+      />
+      <Composition
+        id="SphereToCanvas"
+        component={SphereToCanvas}
+        durationInFrames={120}
+        fps={30}
+        width={1920}
+        height={1080}
+        schema={sphereToCanvasSchema}
+        defaultProps={{
+          imageUrls: [],
+          cardCount: 12,
+          sphereRadius: 3,
+          cardWidth: 0.8,
+          cardHeight: 0.5,
+          scaleDelay: 1,
+          scaleDuration: 0.5,
+          flattenDuration: 1,
+          finalScale: 1.5,
+          backgroundColor: "#0a0a0a",
         }}
       />
     </Folder>

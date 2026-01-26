@@ -55,6 +55,15 @@ export const presets: PresetConfig[] = [
     compositionId: "ZoomBlurVideo",
     durationInFrames: 90,
   },
+  {
+    id: "sphere-to-canvas",
+    name: "3D Sphere Gallery",
+    description: "Cards on a 3D sphere that scales and flattens to 2D grid",
+    icon: "🌐",
+    color: "#0ea5e9",
+    compositionId: "SphereToCanvas",
+    durationInFrames: 120,
+  },
 ];
 
 export const getPresetById = (id: string): PresetConfig | undefined => {
