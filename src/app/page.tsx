@@ -1,14 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { presets } from "@/config/presets";
 
 export default function Home() {
-  const studioPort = 3001;
-
-  const openInStudio = (compositionId: string) => {
-    const studioUrl = `http://localhost:${studioPort}/Video-Effects/${compositionId}`;
-    window.open(studioUrl, "_blank");
-  };
+  const router = useRouter();
 
   return (
     <main style={styles.main}>
@@ -16,14 +12,8 @@ export default function Home() {
         <header style={styles.header}>
           <h1 style={styles.title}>Video Effects Studio</h1>
           <p style={styles.subtitle}>
-            Choose an effect preset and open it in Remotion Studio
+            Choose an effect preset to preview it with Remotion Player
           </p>
-          <div style={styles.instructions}>
-            <span style={styles.instructionBadge}>1</span>
-            Run <code style={styles.code}>npm run remotion:studio</code> in terminal
-            <span style={styles.instructionBadge}>2</span>
-            Click a card to open the effect
-          </div>
         </header>
 
         <div style={styles.grid}>
@@ -34,7 +24,7 @@ export default function Home() {
                 ...styles.card,
                 borderColor: preset.color,
               }}
-              onClick={() => openInStudio(preset.compositionId)}
+              onClick={() => router.push(`/preview/${preset.id}`)}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-4px)";
                 e.currentTarget.style.boxShadow = `0 20px 40px ${preset.color}30`;
@@ -64,20 +54,25 @@ export default function Home() {
                 >
                   {preset.compositionId}
                 </span>
-                <span style={styles.openStudio}>Open in Studio</span>
+                <span style={styles.openStudio}>Preview →</span>
               </div>
             </div>
           ))}
         </div>
 
         <div style={styles.addMore}>
-          <h3 style={styles.addMoreTitle}>Want more effects?</h3>
+          <h3 style={styles.addMoreTitle}>Want to render videos?</h3>
           <p style={styles.addMoreText}>
-            Add new compositions in{" "}
-            <code style={styles.code}>src/remotion/compositions/</code> and
-            register them in{" "}
-            <code style={styles.code}>src/remotion/Root.tsx</code>
+            Clone the repo and run <code style={styles.code}>npm run remotion:studio</code> locally
           </p>
+          <a
+            href="https://github.com/ikanishakm/video-effects-studio"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.githubLink}
+          >
+            View on GitHub →
+          </a>
         </div>
       </div>
     </main>
@@ -108,29 +103,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   subtitle: {
     color: "var(--text-secondary)",
     fontSize: 18,
-    marginBottom: 24,
-  },
-  instructions: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 12,
-    background: "var(--bg-secondary)",
-    padding: "12px 24px",
-    borderRadius: 12,
-    fontSize: 14,
-    color: "var(--text-secondary)",
-  },
-  instructionBadge: {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 24,
-    height: 24,
-    borderRadius: "50%",
-    background: "var(--accent)",
-    color: "white",
-    fontSize: 12,
-    fontWeight: 600,
   },
   code: {
     background: "var(--bg-tertiary)",
@@ -210,5 +182,12 @@ const styles: { [key: string]: React.CSSProperties } = {
   addMoreText: {
     fontSize: 14,
     color: "var(--text-secondary)",
+    marginBottom: 16,
+  },
+  githubLink: {
+    color: "var(--accent)",
+    textDecoration: "none",
+    fontWeight: 500,
+    fontSize: 14,
   },
 };

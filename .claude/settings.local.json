@@ -5,7 +5,9 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(gh repo create:*)",
-      "Bash(npx vercel --yes)"
+      "Bash(npx vercel --yes)",
+      "Bash(git push)",
+      "Bash(npx vercel:*)"
     ]
   }
 }
