@@ -3,11 +3,11 @@
 import { presets } from "@/config/presets";
 
 export default function Home() {
-  const STUDIO_PORT = 3001;
+  const STUDIO_URL = "https://video-effects-studio-production.up.railway.app";
 
   const openRemotionStudio = (compositionId: string) => {
     // Opens Remotion Studio with the specific composition
-    const studioUrl = `http://localhost:${STUDIO_PORT}/Video-Effects/${compositionId}`;
+    const studioUrl = `${STUDIO_URL}/Video-Effects/${compositionId}`;
     window.open(studioUrl, "_blank");
   };
 
@@ -20,11 +20,8 @@ export default function Home() {
             Choose an effect preset to open it in Remotion Studio
           </p>
           <div style={styles.instructions}>
-            <span style={styles.badge}>Step 1</span>
-            <span>Run</span>
-            <code style={styles.code}>npm run remotion:studio</code>
-            <span style={styles.badge}>Step 2</span>
-            <span>Click a card below</span>
+            <span style={styles.badge}>Click a card</span>
+            <span>to open the effect in Remotion Studio and customize it</span>
           </div>
         </header>
 
