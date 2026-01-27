@@ -64,6 +64,15 @@ export const presets: PresetConfig[] = [
     compositionId: "SphereToCanvas",
     durationInFrames: 120,
   },
+  {
+    id: "ripple-plane",
+    name: "Ripple Waves",
+    description: "Mesmerizing sine wave ripples with custom shaders",
+    icon: "🌊",
+    color: "#06b6d4",
+    compositionId: "RipplePlane",
+    durationInFrames: 180,
+  },
 ];
 
 export const getPresetById = (id: string): PresetConfig | undefined => {

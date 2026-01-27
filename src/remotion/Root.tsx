@@ -5,6 +5,7 @@ import { BounceInVideo, bounceInVideoSchema } from "./compositions/BounceInVideo
 import { RotateRevealVideo, rotateRevealVideoSchema } from "./compositions/RotateRevealVideo";
 import { ZoomBlurVideo, zoomBlurVideoSchema } from "./compositions/ZoomBlurVideo";
 import { SphereToCanvas, sphereToCanvasSchema } from "./compositions/SphereToCanvas";
+import { RipplePlane, ripplePlaneSchema } from "./compositions/RipplePlane";
 
 export const RemotionRoot = () => {
   return (
@@ -103,6 +104,25 @@ export const RemotionRoot = () => {
           flattenDuration: 1,
           finalScale: 1.5,
           backgroundColor: "#0a0a0a",
+        }}
+      />
+      <Composition
+        id="RipplePlane"
+        component={RipplePlane}
+        durationInFrames={180}
+        fps={30}
+        width={1920}
+        height={1080}
+        schema={ripplePlaneSchema}
+        defaultProps={{
+          gridSize: 50,
+          amplitude: 0.5,
+          frequency: 2,
+          speed: 1,
+          waveCount: 3,
+          color1: "#6366f1",
+          color2: "#ec4899",
+          backgroundColor: "#000000",
         }}
       />
     </Folder>
