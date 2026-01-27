@@ -3,18 +3,6 @@ import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import * as THREE from "three";
 import { z } from "zod";
-import {
-  uniform,
-  positionLocal,
-  distance,
-  sin,
-  float,
-  vec2,
-  vec3,
-  mix,
-  uv,
-  MeshStandardNodeMaterial,
-} from "three/tsl";
 
 export const ripplePlaneSchema = z.object({
   gridSize: z.number().default(50),
@@ -43,58 +31,82 @@ const RipplePlaneScene: React.FC<RipplePlaneSceneProps> = ({
   color2,
   frame,
 }) => {
-  // TSL uniforms
-  const uTime = uniform((frame / 30) * speed);
-  const uAmplitude = uniform(amplitude);
-  const uFrequency = uniform(frequency);
-  const uWaveCount = uniform(waveCount);
-  const uColor1 = uniform(vec3(new THREE.Color(color1)));
-  const uColor2 = uniform(vec3(new THREE.Color(color2)));
+  // Custom vertex shader for ripple effect
+  const vertexShader = `
+    varying vec2 vUv;
+    varying float vElevation;
+    uniform float uTime;
+    uniform float uAmplitude;
+    uniform float uFrequency;
+    uniform float uWaveCount;
 
-  // TSL node-based shader material
-  const shaderMaterial = useMemo(() => {
-    // Calculate distance from center using TSL
-    const dist = distance(vec2(positionLocal.x, positionLocal.y), vec2(0, 0));
+    void main() {
+      vUv = uv;
 
-    // Create ripple elevation effect
-    let elevation = float(0);
-    for (let i = 1; i <= waveCount; i++) {
-      const wave = sin(dist.mul(uFrequency).mul(i).sub(uTime)).div(i);
-      elevation = elevation.add(wave);
+      vec3 pos = position;
+
+      // Calculate distance from center
+      float dist = distance(vec2(pos.x, pos.y), vec2(0.0, 0.0));
+
+      // Create outward ripples using sine waves
+      float elevation = 0.0;
+      for (float i = 1.0; i <= 10.0; i++) {
+        if (i > uWaveCount) break;
+        elevation += sin(dist * uFrequency * i - uTime) / i;
+      }
+
+      elevation *= uAmplitude;
+      pos.z = elevation;
+      vElevation = elevation;
+
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
     }
-    elevation = elevation.mul(uAmplitude);
+  `;
 
-    // Normalize elevation for color mixing
-    const normalized = elevation.add(uAmplitude).div(uAmplitude.mul(2.0));
+  // Custom fragment shader for color gradient based on elevation
+  const fragmentShader = `
+    varying vec2 vUv;
+    varying float vElevation;
+    uniform vec3 uColor1;
+    uniform vec3 uColor2;
+    uniform float uAmplitude;
 
-    // Mix colors based on elevation
-    const color = mix(uColor1, uColor2, normalized);
+    void main() {
+      // Normalize elevation to 0-1 range
+      float normalized = (vElevation + uAmplitude) / (uAmplitude * 2.0);
 
-    // Add brightness variation
-    const brightness = float(0.7).add(normalized.mul(0.3));
-    const finalColor = color.mul(brightness);
+      // Mix colors based on elevation
+      vec3 color = mix(uColor1, uColor2, normalized);
 
-    // Create material with position offset
-    const material = new MeshStandardNodeMaterial({
+      // Add some brightness variation
+      float brightness = 0.7 + normalized * 0.3;
+      color *= brightness;
+
+      gl_FragColor = vec4(color, 1.0);
+    }
+  `;
+
+  // Create shader material with uniforms
+  const shaderMaterial = useMemo(() => {
+    return new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+        uAmplitude: { value: amplitude },
+        uFrequency: { value: frequency },
+        uWaveCount: { value: waveCount },
+        uColor1: { value: new THREE.Color(color1) },
+        uColor2: { value: new THREE.Color(color2) },
+      },
+      wireframe: false,
       side: THREE.DoubleSide,
     });
+  }, [amplitude, frequency, waveCount, color1, color2]);
 
-    // Apply vertex displacement
-    material.positionNode = positionLocal.add(vec3(0, 0, elevation));
-
-    // Apply color
-    material.colorNode = finalColor;
-
-    return material;
-  }, [amplitude, frequency, waveCount, color1, color2, frame, speed]);
-
-  // Update uniforms
-  uTime.value = (frame / 30) * speed;
-  uAmplitude.value = amplitude;
-  uFrequency.value = frequency;
-  uWaveCount.value = waveCount;
-  uColor1.value = new THREE.Color(color1);
-  uColor2.value = new THREE.Color(color2);
+  // Update time uniform based on frame
+  const time = (frame / 30) * speed;
+  shaderMaterial.uniforms.uTime.value = time;
 
   // Camera rotation
   const cameraY = Math.sin(frame * 0.005) * 2 + 3;
