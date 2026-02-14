@@ -6,6 +6,7 @@ import { RotateRevealVideo, rotateRevealVideoSchema } from "./compositions/Rotat
 import { ZoomBlurVideo, zoomBlurVideoSchema } from "./compositions/ZoomBlurVideo";
 import { SphereToCanvas, sphereToCanvasSchema } from "./compositions/SphereToCanvas";
 import { RipplePlane, ripplePlaneSchema } from "./compositions/RipplePlane";
+import { SequenceComposition, sequenceCompositionSchema } from "./compositions/SequenceComposition";
 
 export const RemotionRoot = () => {
   return (
@@ -123,6 +124,29 @@ export const RemotionRoot = () => {
           color1: "#6366f1",
           color2: "#ec4899",
           backgroundColor: "#000000",
+        }}
+      />
+      <Composition
+        id="SequenceBuilder"
+        component={SequenceComposition}
+        durationInFrames={150}
+        fps={30}
+        width={1920}
+        height={1080}
+        schema={sequenceCompositionSchema}
+        defaultProps={{
+          titleText: "Create Stunning Videos",
+          titleFontSize: 64,
+          titleColor: "#ffffff",
+          subtitleText: "With Remotion & React",
+          subtitleFontSize: 32,
+          subtitleColor: "#a78bfa",
+          buttonLabel: "Get Started",
+          buttonColor: "#6366f1",
+          imageSrc: "",
+          shapeColor: "#ec4899",
+          backgroundColor: "#0a0a1a",
+          staggerDelay: 0.3,
         }}
       />
     </Folder>

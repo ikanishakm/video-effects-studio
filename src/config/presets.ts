@@ -73,6 +73,15 @@ export const presets: PresetConfig[] = [
     compositionId: "RipplePlane",
     durationInFrames: 180,
   },
+  {
+    id: "sequence-builder",
+    name: "Sequence Builder",
+    description: "Staggered text, image, button & shape with fade/scale/slide controls",
+    icon: "🎯",
+    color: "#8b5cf6",
+    compositionId: "SequenceBuilder",
+    durationInFrames: 150,
+  },
 ];
 
 export const getPresetById = (id: string): PresetConfig | undefined => {
