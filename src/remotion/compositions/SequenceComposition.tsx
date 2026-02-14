@@ -5,8 +5,21 @@ import { AnimatedText } from "../components/AnimatedText";
 import { AnimatedButton } from "../components/AnimatedButton";
 import { AnimatedImage } from "../components/AnimatedImage";
 import { AnimatedShape } from "../components/AnimatedShape";
+import { RipplePlane } from "./RipplePlane";
+import { SphereToCanvas } from "./SphereToCanvas";
 
 export const sequenceCompositionSchema = z.object({
+  // Background composition
+  backgroundEffect: z.enum(["none", "ripple", "sphere"]).default("none"),
+  // Ripple settings (when backgroundEffect = "ripple")
+  rippleAmplitude: z.number().default(0.3),
+  rippleFrequency: z.number().default(2),
+  rippleSpeed: z.number().default(1),
+  rippleColor1: z.string().default("#6366f1"),
+  rippleColor2: z.string().default("#ec4899"),
+  // Sphere settings (when backgroundEffect = "sphere")
+  sphereCardCount: z.number().default(12),
+  sphereRadius: z.number().default(3),
   // Title
   titleText: z.string().default("Create Stunning Videos"),
   titleFontSize: z.number().default(64),
@@ -31,6 +44,14 @@ export const sequenceCompositionSchema = z.object({
 type SequenceCompositionProps = z.infer<typeof sequenceCompositionSchema>;
 
 export const SequenceComposition: React.FC<SequenceCompositionProps> = ({
+  backgroundEffect,
+  rippleAmplitude,
+  rippleFrequency,
+  rippleSpeed,
+  rippleColor1,
+  rippleColor2,
+  sphereCardCount,
+  sphereRadius,
   titleText,
   titleFontSize,
   titleColor,
@@ -58,28 +79,63 @@ export const SequenceComposition: React.FC<SequenceCompositionProps> = ({
         gap: 24,
       }}
     >
-      {/* Background decorative shape */}
-      <Sequence from={0} layout="none">
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          <AnimatedShape
-            shape="circle"
-            width={500}
-            height={500}
-            fill={`${shapeColor}15`}
-            scaleFrom={0}
-            scaleTo={1}
-            fadeInDuration={1}
-            springConfig={{ damping: 20, stiffness: 60 }}
+      {/* Background composition layer */}
+      {backgroundEffect === "ripple" && (
+        <AbsoluteFill style={{ opacity: 0.6 }}>
+          <RipplePlane
+            gridSize={50}
+            amplitude={rippleAmplitude}
+            frequency={rippleFrequency}
+            speed={rippleSpeed}
+            waveCount={3}
+            color1={rippleColor1}
+            color2={rippleColor2}
+            backgroundColor="transparent"
           />
-        </div>
-      </Sequence>
+        </AbsoluteFill>
+      )}
+
+      {backgroundEffect === "sphere" && (
+        <AbsoluteFill style={{ opacity: 0.5 }}>
+          <SphereToCanvas
+            imageUrls={[]}
+            cardCount={sphereCardCount}
+            sphereRadius={sphereRadius}
+            cardWidth={0.8}
+            cardHeight={0.5}
+            scaleDelay={0.5}
+            scaleDuration={0.5}
+            flattenDuration={1.5}
+            finalScale={1.2}
+            backgroundColor="transparent"
+          />
+        </AbsoluteFill>
+      )}
+
+      {/* Background decorative shape (when no composition bg) */}
+      {backgroundEffect === "none" && (
+        <Sequence from={0} layout="none">
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <AnimatedShape
+              shape="circle"
+              width={500}
+              height={500}
+              fill={`${shapeColor}15`}
+              scaleFrom={0}
+              scaleTo={1}
+              fadeInDuration={1}
+              springConfig={{ damping: 20, stiffness: 60 }}
+            />
+          </div>
+        </Sequence>
+      )}
 
       {/* Title */}
       <Sequence from={stagger} layout="none">

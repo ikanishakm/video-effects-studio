@@ -135,6 +135,14 @@ export const RemotionRoot = () => {
         height={1080}
         schema={sequenceCompositionSchema}
         defaultProps={{
+          backgroundEffect: "none" as const,
+          rippleAmplitude: 0.3,
+          rippleFrequency: 2,
+          rippleSpeed: 1,
+          rippleColor1: "#6366f1",
+          rippleColor2: "#ec4899",
+          sphereCardCount: 12,
+          sphereRadius: 3,
           titleText: "Create Stunning Videos",
           titleFontSize: 64,
           titleColor: "#ffffff",
